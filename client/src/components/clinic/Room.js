@@ -117,15 +117,15 @@ const Room = (props) => {
     return (
         <Container>
             <video muted ref={userVideo} autoPlay playsInline />
-            {/* {peers.map((peer, index) => {
+            {peers.map((peer, index) => {
+                console.log(peer)
+                console.log(index)
                 return (
                     <Video key={index} peer={peer} />
                 );
-            })} */}
+            })}
 
-            {
-                    <Video key={peers[0].index} peer={peers[0].peer} />
-            }
+            
         </Container>
     );
 };
