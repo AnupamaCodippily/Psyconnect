@@ -8,7 +8,7 @@ const appoinmentSchema = require('../schemas/appointment')
 const sessionSchema = require('../schemas/session')
 
 
-var uri = process.env.MONGODB_ADDON_URI || "mongodb://localhost:27017/psyconnect_db";
+var uri = process.env.MONGODB_URI || "mongodb://localhost:27017/psyconnect_db";
 
 
 

@@ -18,6 +18,7 @@ import LoggedInPatientRoute from './components/routeExtensions/LoggedInPatientRo
 import LoggedInDoctorRoute from './components/routeExtensions/LoggedInDoctorRoute';
 import { PersistGate } from 'redux-persist/integration/react'
 import Room from './components/clinic/Room';
+import Clinic from './components/clinic/Clinic';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
             <LoggedInDoctorRoute exact path='/doctor' component={DoctorDashboard} />
             <LoggedInDoctorRoute exact path='/doctor/clinic' component={DoctorClinic} />
             <Route path='/room/:appointmentId' component={Room}></Route>
+            <Route path='/clinic/:appointmentId' component={Clinic}></Route>
         </Switch>
       </div>
     </PersistGate>

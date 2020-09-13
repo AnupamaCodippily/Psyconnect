@@ -7,7 +7,7 @@ const doctorSchema = require('../schemas/doctor')
 const sessionSchema = require('../schemas/session')
 const appointmentSchema = require('../schemas/appointment');
 
-var uri = process.env.MONGODB_ADDON_URI || "mongodb://localhost:27017/psyconnect_db";
+var uri = process.env.MONGODB_URI || "mongodb://localhost:27017/psyconnect_db";
 
 router.post( '/auth', (req, res) => {
     mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true });

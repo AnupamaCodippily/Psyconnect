@@ -9,7 +9,7 @@ const e = require('express');
 
 const mongoose = require('mongoose')
 
-var uri = process.env.MONGODB_ADDON_URI || "mongodb://localhost:27017/psyconnect_db";
+var uri = process.env.MONGODB_URI || "mongodb://localhost:27017/psyconnect_db";
 
 
     var sessions = [
