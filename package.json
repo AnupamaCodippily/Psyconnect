@@ -6,9 +6,12 @@
   "scripts": {
     "start": "node ./src/api/server.js",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build",
-    "dev": "nodemon ./src/api/server.js && nodemon ./src/videoConferencing/socket.js",
+    "dev": "nodemon ./src/api/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "10.16.0"
+},
   "author": "Anupama Codippily",
   "license": "ISC",
   "dependencies": {
