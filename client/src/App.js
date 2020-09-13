@@ -40,7 +40,7 @@ function App() {
             <LoggedInDoctorRoute exact path='/doctor' component={DoctorDashboard} />
             <LoggedInDoctorRoute exact path='/doctor/clinic' component={DoctorClinic} />
             <Route path='/room/:appointmentId' component={Room}></Route>
-            <Route path='/clinic/:appointmentId' component={Clinic}></Route>
+            <Route path='/clinic/:appointmentId' component={DoctorClinic}></Route>
         </Switch>
       </div>
     </PersistGate>
