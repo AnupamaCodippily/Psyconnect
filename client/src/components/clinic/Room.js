@@ -96,6 +96,12 @@ const Room = (props) => {
             socketRef.current.emit("sending signal", { userToSignal, callerID, signal })
         })
 
+        // added
+        peer.on('stream', stream => {
+            otherVideo.current.srcObject = stream
+        })
+
+
         return peer;
     }
 
