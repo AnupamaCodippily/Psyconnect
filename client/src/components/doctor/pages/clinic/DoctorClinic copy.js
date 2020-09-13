@@ -64,6 +64,16 @@ function DoctorClinic(props) {
     //   peer : thisPeer
     // });
 
+    // set doctor receiving the call back
+    doctorPeer.on("call", (call) => {
+      alert(33)
+      call.answer(stream);
+      call.on("stream", (patientVideoStream) => {
+        // patientVideo.srcObject = patientVideoStream;
+        patientVideo = <Video stream={patientVideoStream}></Video>;
+      });
+      setCallAccepted(true);
+    });
 
     // handling the addition of the first patient on entering the clinic
     socket.current.on("firstpatient", (appointment) => {
