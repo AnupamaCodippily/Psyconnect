@@ -4,7 +4,8 @@ const cors = require("cors");
 // const bodyParser = require('body-parser');
 const path = require("path");
 
-app.use(express.static(path.join(__dirname, "../../client/build")));
+// app.use(express.static(path.join(__dirname, "../../client/build")));
+app.use(express.static(path.join("/client/build")));
 
 app.use(cors());
 
@@ -32,8 +33,6 @@ const http = require("http");
 const server = http.createServer(app);
 const socket = require("socket.io");
 const io = socket(server, { origins: "*:*" });
-const { v4 } = require("uuid");
-
 
 const users = {};
 
