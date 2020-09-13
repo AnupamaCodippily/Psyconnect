@@ -84,6 +84,7 @@ const Room = (props) => {
         const peer = new Peer({
             initiator: true,
             trickle: false,
+            config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }] },
             stream,
         });
 
@@ -98,6 +99,7 @@ const Room = (props) => {
         const peer = new Peer({
             initiator: false,
             trickle: false,
+            config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }] },
             stream,
         })
 
