@@ -4,7 +4,7 @@
   "description": "Psyconnect NodeJS Backend",
   "main": "src/api/server.js",
   "scripts": {
-    "start": "node ./src/api/server.js && node ./src/videoConferencing/socket.js",
+    "start": "node ./src/api/server.js",
     "dev": "nodemon ./src/api/server.js && nodemon ./src/videoConferencing/socket.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
