@@ -19,6 +19,7 @@ function Clinic(props) {
 
     return (
         <div>
+            {alert('test')}
             {comp}
         </div>
     )
