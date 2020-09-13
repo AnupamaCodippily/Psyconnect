@@ -5,6 +5,7 @@
   "main": "src/api/server.js",
   "scripts": {
     "start": "node ./src/api/server.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build",
     "dev": "nodemon ./src/api/server.js && nodemon ./src/videoConferencing/socket.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

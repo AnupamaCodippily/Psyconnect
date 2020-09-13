@@ -4,7 +4,7 @@ const cors = require("cors");
 // const bodyParser = require('body-parser');
 const path = require("path");
 
-app.use(express.static("https://psyconnectme.herokuapp.com/client/build"));
+app.use(express.static(path.join(__dirname, "../../client/build")));
 // app.use(express.static(path.join("/client/build")));
 
 app.use(cors());
