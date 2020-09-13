@@ -1,0 +1,22 @@
+{
+  "name": "server_node",
+  "version": "1.0.0",
+  "description": "Psyconnect NodeJS Backend",
+  "main": "src/api/server.js",
+  "scripts": {
+    "start": "node ./src/api/server.js && node ./src/videoConferencing/socket.js",
+    "dev": "nodemon ./src/api/server.js && nodemon ./src/videoConferencing/socket.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anupama Codippily",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "mongoose": "^5.9.26",
+    "socket.io": "^2.3.0",
+    "uuid": "^8.3.0"
+  }
+}
