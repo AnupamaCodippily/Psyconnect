@@ -45,6 +45,8 @@ const Room = (props) => {
     const peersRef = useRef([]);
     const roomID = props.match.params.roomID;
 
+
+    const otherVideo = useRef()
     const [patients, setPatients] = useState([])
 
     useEffect(() => {
@@ -118,12 +120,17 @@ const Room = (props) => {
         <Container>
             <video muted ref={userVideo} autoPlay playsInline />
             {peers.map((peer, index) => {
-                console.log(peer)
-                console.log(index)
-                return (
-                    <Video key={index} peer={peer} />
-                );
+                console.log(typeof(peers))
+                // console.log(index)
+                // return (
+                //     <Video key={index} peer={peer} />
+                // );
+                otherVideo.current.srcObject = peer.stream
             })}
+
+            <video ref={otherVideo} autoPlay playsInline />
+
+            
 
             
         </Container>
