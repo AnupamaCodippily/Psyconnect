@@ -45,6 +45,8 @@ const Room = (props) => {
     const peersRef = useRef([]);
     const roomID = props.match.params.roomID;
 
+    const [patients, setPatients] = useState([])
+
     useEffect(() => {
         socketRef.current = io.connect("/");
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
@@ -115,11 +117,15 @@ const Room = (props) => {
     return (
         <Container>
             <video muted ref={userVideo} autoPlay playsInline />
-            {peers.map((peer, index) => {
+            {/* {peers.map((peer, index) => {
                 return (
                     <Video key={index} peer={peer} />
                 );
-            })}
+            })} */}
+
+            {
+                    <Video key={peers[0].index} peer={peers[0].peer} />
+            }
         </Container>
     );
 };
