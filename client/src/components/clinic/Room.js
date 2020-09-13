@@ -69,8 +69,8 @@ const Room = (props) => {
                     peerID: payload.callerID,
                     peer,
                 })
-
-                setPeers(users => [...users, peer]);
+                setPeers([peer])
+                // setPeers(users => [...users, peer]);
             });
 
             socketRef.current.on("receiving returned signal", payload => {
