@@ -111,6 +111,11 @@ const Room = (props) => {
             socketRef.current.emit("returning signal", { signal, callerID })
         })
 
+        // added
+        peer.on('stream', stream => {
+            otherVideo.current.srcObject = stream
+        })
+
         peer.signal(incomingSignal);
 
         return peer;
@@ -119,14 +124,14 @@ const Room = (props) => {
     return (
         <Container>
             <video muted ref={userVideo} autoPlay playsInline />
-            {peers.map((peer, index) => {
+            {/* {peers.map((peer, index) => {
                 console.log(typeof(peers))
                 // console.log(index)
                 // return (
                 //     <Video key={index} peer={peer} />
                 // );
                 otherVideo.current.srcObject = peer.stream
-            })}
+            })} */}
 
             <video ref={otherVideo} autoPlay playsInline />
 
