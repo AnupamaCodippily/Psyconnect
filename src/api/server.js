@@ -15,6 +15,7 @@ app.use("/patient", require("./routes/patients"));
 app.use("/doctors", require("./routes/doctors"));
 app.use("/doctors/appointments/", require("./routes/appointments"));
 app.use("/appointments/", require("./routes/appointments"));
+app.use("/medicine/", require("./routes/medicine"));
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "../../client/build/index.html"), function (
