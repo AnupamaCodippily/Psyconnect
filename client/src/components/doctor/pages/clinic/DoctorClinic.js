@@ -38,7 +38,7 @@ function DoctorClinic(props) {
   });
 
 
-  console.log(doctorPeer);
+  // console.log(doctorPeer);
 
   // const thisPeer = new Peer({
   //   initiator: true,

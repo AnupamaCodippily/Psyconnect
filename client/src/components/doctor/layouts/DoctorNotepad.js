@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import { response } from "express";
 
 export default function DoctorNotepad() {
   const dropDown = useRef(null);
@@ -14,42 +13,58 @@ export default function DoctorNotepad() {
   const medication = useRef({});
 
   const [medicationRows, setMedicationRows] = useState(null);
-  const [medicines, setMedicines] = useState(null)
-  let medicineList
+  const [medicines, setMedicines] = useState(null);
+  const [medicineList, setMedicineList] = useState([]);
 
+  useEffect(() => {
+    fetchMedicineList();
+  }, []);
 
-  useEffect( () => {
-      fetchMedicineList()
-  }, [])
-
-  const fetchMedicineList =  () => {
-    fetch ('/medicine/list')
-    .then( res =>{ res.json()} )
-    .then( res => { setMedicines(res)} )
-    .catch( err => { console.log('Error fetching medicine data') })
-  }
+  const fetchMedicineList = () => {
+    fetch("/medicine/list")
+      .then((res) => res.json())
+      .then((res) => {
+        setMedicines(getMedsList(res));
+        setMedicineList(res);
+      })
+      .catch((err) => {
+        console.log("Error fetching medicine data" + err);
+      });
+  };
 
   function toggleFunction(e) {
     e.preventDefault();
     dropDown.current.classList.toggle("show");
     toggleButtonType();
-    // alert(1)
   }
 
   const handlePrescribe = (e) => {
-    medication.current[input.current.value] = {
-      name: input.current.value,
-      dosage: 0,
-      times: 0,
-      beforeMeal: true,
-    };
+    if (checkValidMeds(input.current.value)) {
+      medication.current[input.current.value] = {
+        name: input.current.value,
+        dosage: 0,
+        times: 0,
+        beforeMeal: "Before",
+      };
 
-    setMedicationRows(getRows());
+      setMedicationRows(getRows());
+    }
   };
 
+  const checkValidMeds = (med) => {
+    let ans = false;
+    medicineList.forEach((m) => {
+      if (m.name == med) {
+        ans = true;
+      }
+    });
+    return ans;
+  };
 
-  const handleChangeValue = (med, index) => {
-
+  // when the doctor changes a dosage/ time of a prescribed medicine
+  const changeValue = (e, med, index) => {
+    medication.current[med][index] = e.target.value;
+    console.log(medication.current[med]);
   };
 
   const handleRemove = (med) => {
@@ -58,19 +73,19 @@ export default function DoctorNotepad() {
     setMedicationRows(getRows());
   };
 
-
-
-  const getMedsList = list => {
-    return list.map( med => {
-        return(<a
-        onClick={(e) => {
-          setSearchValue(e);
-        }}
-      >
-        { med.name }
-      </a>)
-    } )
-  }
+  const getMedsList = (list) => {
+    return list.map((med) => {
+      return (
+        <a
+          onClick={(e) => {
+            setSearchValue(e);
+          }}
+        >
+          {med.name}
+        </a>
+      );
+    });
+  };
 
   const getRows = () => {
     return Object.keys(medication.current).map((k, v) => {
@@ -79,20 +94,22 @@ export default function DoctorNotepad() {
         <tr>
           <td>{medication.current[k].name}</td>
           <td>
-            <input type="number" value={medication.current[k].dosage}></input>
+            <input
+              type="number"
+              onChange={(e) => {
+                changeValue(e, k, "dosage");
+              }}
+              plaxeholder="0"
+            ></input>
           </td>
           <td>
-            <select
-              value={
-                medication.current[k].beforeMeal === true ? "Before" : "After"
-              }
-            >
-              <option value="After">After</option>
+            <select onChange={ e => { changeValue(e, k, 'beforeMeal') } } >
               <option value="Before">Before</option>
+              <option value="After">After</option>
             </select>
           </td>
           <td>
-            <input type="number" value={medication.current[k].times}></input>
+            <input onChange={ e => { changeValue(e, k ,'times') } } type="number"></input>
           </td>
           <td>
             <Button
@@ -123,13 +140,10 @@ export default function DoctorNotepad() {
   function filterFunction(e) {
     setSearchMedicineValue({ value: e.target.value });
 
-    var input, filter, ul, li, a, i;
-    // input = document.getElementById("myInput");
+    var filter, a, i;
     filter = searchMedicineValue.value.toUpperCase();
-    // alert(filter)
     let div = dropDown.current;
     a = div.getElementsByTagName("a");
-    // alert(a.length)
     for (i = 0; i < a.length; i++) {
       let txtValue = a[i].textContent || a[i].innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -168,42 +182,7 @@ export default function DoctorNotepad() {
                 ref={input}
                 onKeyUp={filterFunction}
               />
-              { medicines }
-              {/* <a
-                onClick={(e) => {
-                  setSearchValue(e);
-                }}
-              >
-                About
-              </a>
-              <a
-                onClick={(e) => {
-                  setSearchValue(e);
-                }}
-              >
-                Benzene
-              </a>
-              <a
-                onClick={(e) => {
-                  setSearchValue(e);
-                }}
-              >
-                Acid
-              </a>
-              <a
-                onClick={(e) => {
-                  setSearchValue(e);
-                }}
-              >
-                Nutella
-              </a>
-              <a
-                onClick={(e) => {
-                  setSearchValue(e);
-                }}
-              >
-                Kittens
-              </a> */}
+              {medicines}
             </div>
           </div>
 
