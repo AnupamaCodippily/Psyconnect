@@ -126,9 +126,12 @@ function PatientClinic(props) {
       <h4>Patient number : {props.patient.currentAppointment.patient_number}</h4>
       <h4>appointment id : {props.patient.currentAppointment._id}</h4>
       <div>
-        {UserVideo}
-        {PartnerVideo}
+        {/* {UserVideo}
+        {PartnerVideo} */}
     
+    <video muted ref={props.yourVid} autoPlay playsInline />
+      <video ref={props.otherVid} autoPlay playsInline />
+
       </div>
 
       <div>{incomingCall}</div>

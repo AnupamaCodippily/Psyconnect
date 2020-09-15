@@ -7,6 +7,7 @@ import Peer from "peerjs";
 import Container from "react-bootstrap/Container";
 import Video from "./Video";
 import { connect } from "react-redux";
+import DoctorNotepad from '../../layouts/DoctorNotepad'
 
 function DoctorClinic(props) {
   // const [yourID, setYourID] = useState("");
@@ -137,8 +138,12 @@ function DoctorClinic(props) {
       <h5> Current session id: {currentSessionId} </h5>
       <h4>Patient number : {currentPatientNumber}</h4>
       <div>
-        {UserVideo}
-        {patientVideo}
+        {/* {UserVideo}
+        {patientVideo} */}
+
+      <video muted ref={props.yourVid} autoPlay playsInline />
+      <video ref={props.otherVid} autoPlay playsInline />
+        
       </div>
       <div>
         <h5>Connect to Next Patient</h5>
@@ -146,6 +151,10 @@ function DoctorClinic(props) {
           CONNECT to patient {currentPatientNumber}
         </button>
       </div>
+
+      <DoctorNotepad/>
+
+
     </Container>
   );
 }

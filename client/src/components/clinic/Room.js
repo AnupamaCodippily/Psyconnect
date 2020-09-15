@@ -2,21 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import Container from 'react-bootstrap/Container'
-// import styled from "styled-components";
 
-// const Container = styled.div`
-//     padding: 20px;
-//     display: flex;
-//     height: 100vh;
-//     width: 90%;
-//     margin: auto;
-//     flex-wrap: wrap;
-// `;
+import { connect } from "react-redux";
+// import DoctorNotepad from "../doctor/layouts/DoctorNotepad";
+import DoctorClinic from "../doctor/pages/clinic/DoctorClinic";
+import PatientClinic from "../patient/clinic/PatientClinic";
 
-// const StyledVideo = styled.video`
-//     height: 40%;
-//     width: 50%;
-// `;
+
 
 const Video = (props) => {
     const ref = useRef();
@@ -33,11 +25,6 @@ const Video = (props) => {
 }
 
 
-// const videoConstraints = {
-//     height: window.innerHeight / 2,
-//     width: window.innerWidth / 2
-// };
-
 const Room = (props) => {
     const [peers, setPeers] = useState([]);
     const socketRef = useRef();
@@ -45,6 +32,11 @@ const Room = (props) => {
     const peersRef = useRef([]);
     const roomID = props.match.params.roomID;
 
+    if (props.auth.userType === 'doctor') {
+        // note -- improvement-- add doctor verification
+
+        // if the user is a doctor
+    }
 
     const otherVideo = useRef()
     const [patients, setPatients] = useState([])
@@ -127,6 +119,15 @@ const Room = (props) => {
         return peer;
     }
 
+
+
+    if (props.auth.userType === 'doctor') {
+        return ( <DoctorClinic yourVid={ userVideo } otherVid={otherVideo} /> )
+    }
+    else {
+        return ( <PatientClinic  yourVid={ userVideo } otherVid={otherVideo} />)
+    }
+
     return (
         <Container>
             <video muted ref={userVideo} autoPlay playsInline />
@@ -141,11 +142,14 @@ const Room = (props) => {
 
             <video ref={otherVideo} autoPlay playsInline />
 
-            
 
             
         </Container>
     );
 };
 
-export default Room;
+const mapStateToProps = state => ({
+    auth : state.auth
+})
+
+export default connect (mapStateToProps, {})(Room);

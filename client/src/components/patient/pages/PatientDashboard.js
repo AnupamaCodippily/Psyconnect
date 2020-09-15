@@ -87,7 +87,7 @@ function PatientDashBoard(props) {
       let timeRemaining = nextAppointment.getHours() - date.getHours();
       activeSessionAvailable = timeRemaining < 1;
       activeSession = timeRemaining >= 1 ? null : sortedByDate[0];
-      return ` Your next appointment is in less than ${
+      return ` Youra next appointment is in less than ${
         timeRemaining > 1 ? timeRemaining : 1
       } hour(s) `;
     } else {
@@ -103,7 +103,7 @@ function PatientDashBoard(props) {
     if (activeSessionAvailable){
         setAppointmentLink(
           <Link
-            to={"/patients/clinic/" + activeSession.doctorDetails._id}
+            to={"/room/" + activeSession._id}
             className="nav-link"
           >
             <Button variant="success" onClick={putInSession}>
