@@ -40,58 +40,58 @@ const users = {};
 const socketToRoom = {};
 
 io.on("connection", (socket) => {
-
-
-
-  socket.on("join room", roomID => {
+  socket.on("join room", (roomID) => {
     if (users[roomID]) {
-        const length = users[roomID].length;
-        if (length === 4) {
-            socket.emit("room full");
-            return;
-        }
-        users[roomID].push(socket.id);
+      const length = users[roomID].length;
+      if (length === 4) {
+        socket.emit("room full");
+        return;
+      }
+      users[roomID].push(socket.id);
     } else {
-        users[roomID] = [socket.id];
+      users[roomID] = [socket.id];
     }
     socketToRoom[socket.id] = roomID;
-    const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
+    const usersInThisRoom = users[roomID].filter((id) => id !== socket.id);
 
     socket.emit("all users", usersInThisRoom);
-});
+  });
 
-socket.on("sending signal", payload => {
-    io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
-});
+  socket.on("sending signal", (payload) => {
+    io.to(payload.userToSignal).emit("user joined", {
+      signal: payload.signal,
+      callerID: payload.callerID,
+    });
+  });
 
-socket.on("returning signal", payload => {
-    io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
-});
+  socket.on("returning signal", (payload) => {
+    io.to(payload.callerID).emit("receiving returned signal", {
+      signal: payload.signal,
+      id: socket.id,
+    });
+  });
 
-socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     const roomID = socketToRoom[socket.id];
     let room = users[roomID];
     if (room) {
-        room = room.filter(id => id !== socket.id);
-        users[roomID] = room;
+      room = room.filter((id) => id !== socket.id);
+      users[roomID] = room;
     }
-});
+  });
 
 
-
-
-
-
-
-
-
+  // handle DoctorClinic requesting for next patient data
+  socket.on('requestNextPatient', session_id => {
+    // send the next online patient
+    
+  })
 
   // handle the doctor entering the session
   socket.on("doctorEnterSession", (data) => {
-  
-    console.log('doctor entering the session')
+    console.log("doctor entering the session");
     const session_id = data.appointments[0].session_id;
-    socket.join(session_id)
+    socket.join(session_id);
     io.sockets.adapter.rooms[session_id].appointments = data.appointments.sort(
       (a, b) => {
         if (a.patient_id < b.patient_id) return -1;
@@ -108,8 +108,8 @@ socket.on('disconnect', () => {
       io.sockets.adapter.rooms[session_id].appointments[0]
     );
 
-    socket.emit("doctorIsIn", { peer: data.peer })
-    console.log(io.sockets.adapter.rooms[session_id])
+    socket.emit("doctorIsIn", { peer: data.peer });
+    console.log(io.sockets.adapter.rooms[session_id]);
 
     // request that the first patient enter the session
     // to do -- if patient is offline, proceed to next
@@ -120,8 +120,7 @@ socket.on('disconnect', () => {
 
   // socket to handle the next patient entering the session
   socket.on("patientEnterClinic", (data) => {
-
-    var session_id = data.appointment.session_id
+    var session_id = data.appointment.session_id;
 
     // Check if room, session and appointment exist
     if (io.sockets.adapter.rooms[session_id] !== undefined) {
@@ -142,8 +141,8 @@ socket.on('disconnect', () => {
       // check if patient is the next patient
       // >> if the session id and the next appointment id match, add the patient to the session
       if (
-        io.sockets.adapter.rooms[session_id].appointments[0]
-          ._id == data.appointment._id
+        io.sockets.adapter.rooms[session_id].appointments[0]._id ==
+        data.appointment._id
       ) {
         // tell doctor to connect to patient over webRTC
         console.log(`sending patient data to doctor`);
@@ -155,10 +154,10 @@ socket.on('disconnect', () => {
     } else {
       // then we add the first appointment
       console.log("patient entered, room empty");
-      socket.join(session_id)
+      socket.join(session_id);
     }
 
-    console.log(io.sockets.adapter.rooms[session_id])
+    console.log(io.sockets.adapter.rooms[session_id]);
 
     // if the session id matches, the patient should be on hold until their turn comes up
   });
@@ -178,20 +177,23 @@ socket.on('disconnect', () => {
       console.log("calling next patient");
       // socket.emit( "requestPeer", { appointment: io.sockets.adapter.rooms[session_id].appointments[i] } )
 
-      socket.to(session_id).broadcast.emit('requestPeer', { appointment: io.sockets.adapter.rooms[session_id].appointments[i] } )
-      console.log(io.sockets.adapter.rooms[session_id])
-
+      socket
+        .to(session_id)
+        .broadcast.emit("requestPeer", {
+          appointment: io.sockets.adapter.rooms[session_id].appointments[i],
+        });
+      console.log(io.sockets.adapter.rooms[session_id]);
     }
   });
-  
-  socket.on( 'respondWithPeer', data => {
-    var session_id = data.session_id
-    console.log('patient peer received')
+
+  socket.on("respondWithPeer", (data) => {
+    var session_id = data.session_id;
+    console.log("patient peer received");
     socket.to(session_id).broadcast.emit("patientToConnect", {
-        appointment: io.sockets.adapter.rooms[session_id].appointments[0],
-        peer: data.peer
-      });
-  } ) 
+      appointment: io.sockets.adapter.rooms[session_id].appointments[0],
+      peer: data.peer,
+    });
+  });
 
   socket.on("callDoctor", (data) => {
     io.to(data.userToCall).emit("requestConnection", {
@@ -208,14 +210,11 @@ socket.on('disconnect', () => {
 server.listen(process.env.PORT || 3000);
 // app.listen(process.env.PORT || 3000 )
 
-
-
 // const users = {};
 
 // const socketToRoom = {};
 
 // io.on('connection', socket => {
-
 
 // });
 

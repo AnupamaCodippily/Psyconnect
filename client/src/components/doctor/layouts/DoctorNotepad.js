@@ -16,6 +16,10 @@ export default function DoctorNotepad() {
   const [medicines, setMedicines] = useState(null);
   const [medicineList, setMedicineList] = useState([]);
 
+  const confirmButton = <Button variant='warning' onClick={handleConfirm}> Confirm </Button>
+
+  const [bottomButton, setBottomButton] = useState(confirmButton)
+
   useEffect(() => {
     fetchMedicineList();
   }, []);
@@ -51,6 +55,7 @@ export default function DoctorNotepad() {
     }
   };
 
+  // check if the medicine exists in the records before adding it to the prescription
   const checkValidMeds = (med) => {
     let ans = false;
     medicineList.forEach((m) => {
@@ -64,7 +69,6 @@ export default function DoctorNotepad() {
   // when the doctor changes a dosage/ time of a prescribed medicine
   const changeValue = (e, med, index) => {
     medication.current[med][index] = e.target.value;
-    console.log(medication.current[med]);
   };
 
   const handleRemove = (med) => {
@@ -86,6 +90,27 @@ export default function DoctorNotepad() {
       );
     });
   };
+
+
+  // record the data in the database
+  // set the appointment status to completed
+  const saveMedicineData = () => {
+    fetch('/treatments/', {
+      method: 'post',
+      headers: {
+        'Content-type' : 'application/json'
+      },
+      body: JSON.stringify({
+        medication: medication
+      })
+    })
+  }
+
+  // send the prescription to the patient
+  const sendPrescriptionToPatient = () => {
+
+  }
+  
 
   const getRows = () => {
     return Object.keys(medication.current).map((k, v) => {
@@ -126,6 +151,14 @@ export default function DoctorNotepad() {
       );
     });
   };
+
+
+  // remove the confirm button
+  const handleConfirm = () => {
+    setBottomButton(null)
+    sendPrescriptionToPatient()
+    saveMedicineData()
+  }
 
   const toggleButtonType = () => {
     if (addButton.current.innerText === "Add Medication") {
@@ -205,6 +238,9 @@ export default function DoctorNotepad() {
           {/* map the values to the table body */}
           <tbody>{medicationRows}</tbody>
         </Table>
+      </div>
+      <div>
+        {bottomButton}
       </div>
     </div>
   );

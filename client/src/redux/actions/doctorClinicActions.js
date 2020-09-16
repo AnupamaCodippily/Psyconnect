@@ -9,6 +9,12 @@ export function clinicNextPatient (sessionId) {
         fetch(`${serverUrl}/doctors/appointments/next/${sessionId}`)
         .then( res => res.json() )
         .then( result => {
+            
+            // filter out completed appointments
+            result.appointment = result.appointment.filter(a => {
+                return !a.completed
+            })
+
             dispatch({
                 type : CLINIC_NEXT_PATIENT,
                 payload : result
@@ -16,3 +22,4 @@ export function clinicNextPatient (sessionId) {
         } )
     }
 }
+

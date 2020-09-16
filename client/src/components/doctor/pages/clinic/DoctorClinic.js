@@ -3,13 +3,18 @@ import io from "socket.io-client";
 // import Peer from "peerjs";
 
 import Peer from "peerjs";
+import { useHistory } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
 import Video from "./Video";
 import { connect } from "react-redux";
-import DoctorNotepad from '../../layouts/DoctorNotepad'
+import DoctorNotepad from "../../layouts/DoctorNotepad";
+import { clinicNextPatient } from '../../../../redux/actions/doctorClinicActions'
 
 function DoctorClinic(props) {
+  const history = useHistory();
+
   // const [yourID, setYourID] = useState("");
   const [users, setUsers] = useState({});
   const [stream, setStream] = useState();
@@ -22,28 +27,12 @@ function DoctorClinic(props) {
   let patientVideo;
   const socket = useRef();
 
-  const currentSessionId = props.clinic.items.appointment[0].session_id;
+  const currentAppointment = props.clinic.items.appointment[0]
+  const currentSessionId = currentAppointment.session_id;
 
   const [currentPatientNumber, setCurrentPatientNumber] = useState(0);
+  const [nextAppointment, setNextAppointment] = useState(null);
   // const [currentAppointment, setCurrentAppointment] = useState({});
-
-  // expose the session id, for the patients to connect to
-  const doctorPeer = new Peer(currentSessionId, {
-    host: "/",
-    port: "3001",
-    config: {'iceServers': [
-      { url: 'stun:stun.l.google.com:19302' },
-      { url: 'stun:stun1.l.google.com:19302' },
-    ]}
-  });
-
-
-  // console.log(doctorPeer);
-
-  // const thisPeer = new Peer({
-  //   initiator: true,
-  //   stream: stream
-  // })
 
   useEffect(() => {
     socket.current = io("/");
@@ -65,6 +54,13 @@ function DoctorClinic(props) {
     //   peer : thisPeer
     // });
 
+    // emit the session id, so the server can send the latest appointment from the room
+    socket.current.emit("requestNextPatient", currentSessionId);
+
+    //executed when the next appointment is found or changed
+    socket.current.on("newNextAppointment", (appointmentDetails) => {
+      setNextAppointment(appointmentDetails);
+    });
 
     // handling the addition of the first patient on entering the clinic
     socket.current.on("firstpatient", (appointment) => {
@@ -90,32 +86,23 @@ function DoctorClinic(props) {
     socket.current.emit("callnextpatient", currentSessionId);
   }
 
-  function connectToNextPatient(appointment, peer) {
-    setCurrentPatientNumber(appointment.patient_number);
+  function connectToNextPatient() {
 
-    // connect the the patient with the current appointment
+    setAppointmentComplete()
 
-    try {
-      console.log(doctorPeer)
-      const call = (doctorPeer).call(appointment._id, stream);
-      console.log(typeof(call))
-    } catch (err) {
-      alert(err)
+    if (nextAppointment) history.push(`/${nextAppointment}`);
+    else {
+      alert("No more patients online");
+      history.push("/doctor/");
     }
+  }
 
-    new Peer(appointment._id, {host: '/', port:'3001'}).on('call', (stream) => {
-      alert(1)
-    })
-
-    // const call = doctorPeer.call(currentSessionId, stream);
-
-    // tp.call(appointment._id, stream)
-    // alert(appointment._id)
-
-    // call.on("stream", (patientVideoStream) => {
-    //   alert("patient sent stream");
-    // });
-
+  function setAppointmentComplete () {
+    fetch(`/appointments/complete/${currentAppointment._id}`)
+      .then( res => {
+        clinicNextPatient(currentSessionId)
+      } )
+      .catch(err => { console.log('error completing appointment') })
   }
 
   let UserVideo;
@@ -141,20 +128,19 @@ function DoctorClinic(props) {
         {/* {UserVideo}
         {patientVideo} */}
 
-      <video muted ref={props.yourVid} autoPlay playsInline />
-      <video ref={props.otherVid} autoPlay playsInline />
-        
+        <video muted ref={props.yourVid} autoPlay playsInline />
+        <video ref={props.otherVid} autoPlay playsInline />
       </div>
+
+      <DoctorNotepad />
+
       <div>
+        <hr></hr>
         <h5>Connect to Next Patient</h5>
-        <button onClick={nextPatient}>
-          CONNECT to patient {currentPatientNumber}
-        </button>
+        <Button variant="danger" onClick={connectToNextPatient}>
+          Next Patient
+        </Button>
       </div>
-
-      <DoctorNotepad/>
-
-
     </Container>
   );
 }
@@ -165,4 +151,4 @@ const mapStateToProps = (state) => ({
   clinic: state.clinic,
 });
 
-export default connect(mapStateToProps, {})(DoctorClinic);
+export default connect(mapStateToProps, {clinicNextPatient})(DoctorClinic);
