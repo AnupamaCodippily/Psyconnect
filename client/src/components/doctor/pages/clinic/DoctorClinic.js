@@ -49,16 +49,15 @@ function DoctorClinic(props) {
 
     // as the doctor enters the session. the list of
     // appointments is sent tp the server
-    // socket.current.emit("doctorEnterSession", {
-    //   appointments: props.clinic.items.appointment,
-    //   peer : thisPeer
-    // });
-
-    // emit the session id, so the server can send the latest appointment from the room
-    socket.current.emit("requestNextPatient", currentSessionId);
+    socket.current.emit("doctor joined", {
+      session_id: currentSessionId,
+      appointments: props.clinic.items.appointment
+    });
+    
 
     //executed when the next appointment is found or changed
-    socket.current.on("newNextAppointment", (appointmentDetails) => {
+    socket.current.on("new next appointment", (appointmentDetails) => {
+      console.log('new patient joined')
       setNextAppointment(appointmentDetails);
     });
 
@@ -90,7 +89,7 @@ function DoctorClinic(props) {
 
     setAppointmentComplete()
 
-    if (nextAppointment) history.push(`/${nextAppointment}`);
+    if (nextAppointment._id) history.push(`/room/${nextAppointment._id}`);
     else {
       alert("No more patients online");
       history.push("/doctor/");
@@ -100,7 +99,7 @@ function DoctorClinic(props) {
   function setAppointmentComplete () {
     fetch(`/appointments/complete/${currentAppointment._id}`)
       .then( res => {
-        clinicNextPatient(currentSessionId)
+        props.clinicNextPatient(currentSessionId)
       } )
       .catch(err => { console.log('error completing appointment') })
   }

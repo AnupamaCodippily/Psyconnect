@@ -57,7 +57,7 @@ function PatientClinic(props) {
         }
       });
 
-
+    socket.current.emit('patient joined', { session_id: doctorSessionId, appointment: props.patient.currentAppointment })
 
 
     socket.current.on(`requestPatientConnect`, (data) => {

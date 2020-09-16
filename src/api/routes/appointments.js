@@ -43,9 +43,9 @@ var uri = process.env.MONGODB_URI || "mongodb://localhost:27017/psyconnect_db";
 
     ]
 
-router.get( '/:doctorId/:date', (req, res) => {
-    res.json(sessions);
-} );
+// router.get( '/:doctorId/:date', (req, res) => {
+//     res.json(sessions);
+// } );
 
 router.post( '', (req, res) => {
 
@@ -88,8 +88,23 @@ router.post( '', (req, res) => {
                 }
             } 
         })
-
-
 } )
+
+
+router.get('/complete/:appointment_id', (req, res) => {
+
+    mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false });
+
+    try {
+        
+        appoinmentSchema.updateOne({_id : req.params.appointment_id}, { completed : true }, {}, (err, result) => {
+            if (err) res.json({error : true})
+            else res.json({error: false})
+        })
+    } catch (error) {
+        console.log(error)
+    }
+
+})
 
 module.exports = router;

@@ -36,6 +36,18 @@ export default function DoctorNotepad() {
       });
   };
 
+  const fetchConditionsList = () => {
+    fetch("/conditions/list")
+    .then((res) => res.json())
+    .then((res) => {
+      setMedicines(getMedsList(res));
+      setMedicineList(res);
+    })
+    .catch((err) => {
+      console.log("Error fetching medicine data" + err);
+    });
+  }
+
   function toggleFunction(e) {
     e.preventDefault();
     dropDown.current.classList.toggle("show");
@@ -73,7 +85,6 @@ export default function DoctorNotepad() {
 
   const handleRemove = (med) => {
     delete medication.current[med];
-    console.log(medication.current);
     setMedicationRows(getRows());
   };
 
@@ -101,7 +112,7 @@ export default function DoctorNotepad() {
         'Content-type' : 'application/json'
       },
       body: JSON.stringify({
-        medication: medication
+        medication: medication.current
       })
     })
   }

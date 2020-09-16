@@ -1,11 +1,9 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-// const bodyParser = require('body-parser');
 const path = require("path");
 
 app.use(express.static(path.join(__dirname, "../../client/build")));
-// app.use(express.static(path.join("/client/build")));
 
 app.use(cors());
 
@@ -28,7 +26,6 @@ app.get("*", function (req, res) {
 });
 
 // socket.io and webRTC
-// require('dotenv').config();
 
 const http = require("http");
 const server = http.createServer(app);
@@ -81,10 +78,43 @@ io.on("connection", (socket) => {
   });
 
 
-  // handle DoctorClinic requesting for next patient data
-  socket.on('requestNextPatient', session_id => {
-    // send the next online patient
+  // handle patient coming online
+  socket.on('patient joined', data => {
+    // add patient to room, allowing the server to keep track of them
+    socket.join(data.session_id)
+
+    // update the patients queue (sort it)
+    if (io.sockets.adapter.rooms[data.session_id].onlineAppointments)
+      io.sockets.adapter.rooms[data.session_id].onlineAppointments.push(data.appointment)
+    else 
+      io.sockets.adapter.rooms[data.session_id].onlineAppointments = [data.appointment]
+      
+    io.sockets.adapter.rooms[data.session_id].onlineAppointments = 
+    io.sockets.adapter.rooms[data.session_id].onlineAppointments.sort( (a,b) => {
+      if (a.patient_number < b.patient_number)
+        return 1
+      else if ( a.patient_number > b.patient_number ) 
+        return -1
+      return 0
+   }) 
+
+    // send the updated data to the room's doctor and patients
+    socket.to(data.session_id).broadcast.emit('new next appointment', 
+    io.sockets.adapter.rooms[data.session_id].onlineAppointments[0])
     
+  })
+  
+  socket.on('doctor joined', data => {
+    // add the doctor to the room 
+    socket.join(data.session_id)
+    
+    io.sockets.adapter.rooms[data.session_id].appointments = [...data.appointments]
+
+    // if the doctor joins late, they will need a list of online patients
+    // check if any patients are online
+    if (io.sockets.adapter.rooms[data.session_id].onlineAppointments) {
+      socket.emit('new next appointment', io.sockets.adapter.rooms[data.session_id].onlineAppointments[0])
+    }
   })
 
   // handle the doctor entering the session
