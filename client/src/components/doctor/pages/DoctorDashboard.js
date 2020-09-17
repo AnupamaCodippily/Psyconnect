@@ -25,7 +25,9 @@ function DoctorDashboard(props) {
     setCurrentlyActiveSession();
     setupAppointments();
     calcHoursToNextSession();
-    props.clinicNextPatient(currentlyActiveSession._id);
+    if (currentlyActiveSession){
+      props.clinicNextPatient(currentlyActiveSession._id);
+    }
   }, []);
 
   const setCurrentlyActiveSession = () => {
@@ -48,7 +50,6 @@ function DoctorDashboard(props) {
 
         if (sessionTime <= time) {
           currentlyActiveSession = session.session;
-
           props.setDoctorInSession(session.session);
         }
       }
