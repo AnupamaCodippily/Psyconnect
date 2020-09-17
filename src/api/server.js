@@ -49,8 +49,9 @@ io.on("connection", (socket) => {
       users[roomID] = [socket.id];
     }
     socketToRoom[socket.id] = roomID;
-    const usersInThisRoom = users[roomID].filter((id) => id !== socket.id);
 
+    // send all users besides this user back to the user
+    const usersInThisRoom = users[roomID].filter((id) => id !== socket.id);
     socket.emit("all users", usersInThisRoom);
   });
 

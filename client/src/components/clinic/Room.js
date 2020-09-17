@@ -32,22 +32,21 @@ const Room = (props) => {
     const peersRef = useRef([]);
     const roomID = props.match.params.roomID;
 
-    if (props.auth.userType === 'doctor') {
-        // note -- improvement-- add doctor verification
-
-        // if the user is a doctor
-    }
-
     const otherVideo = useRef()
     const [patients, setPatients] = useState([])
 
     useEffect(() => {
         socketRef.current = io.connect("/");
+
+        // get this user's webcam video stream
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
             userVideo.current.srcObject = stream;
             socketRef.current.emit("join room", roomID);
             socketRef.current.on("all users", users => {
+                // create an empty array to store the other peers
                 const peers = [];
+
+                // add each user to this empty array
                 users.forEach(userID => {
                     const peer = createPeer(userID, socketRef.current.id, stream);
                     peersRef.current.push({
@@ -56,6 +55,8 @@ const Room = (props) => {
                     })
                     peers.push(peer);
                 })
+
+                // set the peers array to the array sent
                 setPeers(peers);
             })
 
@@ -77,6 +78,7 @@ const Room = (props) => {
     }, []);
 
     function createPeer(userToSignal, callerID, stream) {
+        console.log('creating peer')
         const peer = new Peer({
             initiator: true,
             trickle: false,
@@ -85,11 +87,13 @@ const Room = (props) => {
         });
 
         peer.on("signal", signal => {
+            console.log('sending signal')
             socketRef.current.emit("sending signal", { userToSignal, callerID, signal })
         })
 
         // added
         peer.on('stream', stream => {
+            console.log('received stream')
             otherVideo.current.srcObject = stream
         })
 
