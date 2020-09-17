@@ -61,6 +61,8 @@ const Room = (props) => {
             })
 
             socketRef.current.on("user joined", payload => {
+                const item = peersRef.current.find(p => p.peerID === payload.callerID);
+                if(!item) {
                 console.log('user joined')
                 const peer = addPeer(payload.signal, payload.callerID, stream);
                 peersRef.current.push({
@@ -68,7 +70,7 @@ const Room = (props) => {
                     peer,
                 })
                 // setPeers([peer])
-                setPeers(users => [...users, peer]);
+                setPeers(users => [...users, peer]);}
             });
 
             socketRef.current.on("receiving returned signal", payload => {
