@@ -58,25 +58,34 @@ function DoctorDashboard(props) {
 
   const setupAppointments = () => {
     // set the doctor's current appointments in the component state
+    fetch(`/doctors/appointments/next/${currentlyActiveSession._id}`)
+    .then( res => res.json() )
+    .then( result => {
+        // filter out completed appointments
+        result.appointment = result.appointment.filter(a => {
+            return !a.completed
+        })
 
-    let appointments = filterAndSortAppointments(props.clinic.items.appointment)
-    currentAppointments = [...appointments]
-    // set the link variable, to connect to the appointment
-    if (appointments.length > 0) {
-      setCurrentAppointmentLink(
-        <Link to={"/room/" + appointments[0]._id}>
-          <Button role="doctor">ENTER CLINIC</Button>
-        </Link>
-      );
-    }
+        let appointments = filterAndSortAppointments(result.appointment)
+        currentAppointments = [...appointments]
+        // set the link variable, to connect to the appointment
+        if (appointments.length > 0) {
+          setCurrentAppointmentLink(
+            <Link to={"/room/" + appointments[0]._id}>
+              <Button role="doctor">ENTER CLINIC</Button>
+            </Link>
+          );
+        }
+        
+    })
+    .catch(err => { console.log(err) })
 
-    console.log(currentAppointments);
   };
 
   const filterAndSortAppointments = (appointmentList) => {
     // filter out completed appointments
     let list = appointmentList.filter((appointment) => {
-      if (appointment.completed == false) return true;
+      return !appointment.completed
     });
 
     // sort the filtered appointments by number
