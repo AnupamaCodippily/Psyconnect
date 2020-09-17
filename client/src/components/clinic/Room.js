@@ -61,6 +61,7 @@ const Room = (props) => {
             })
 
             socketRef.current.on("user joined", payload => {
+                console.log('user joined')
                 const peer = addPeer(payload.signal, payload.callerID, stream);
                 peersRef.current.push({
                     peerID: payload.callerID,
@@ -71,6 +72,7 @@ const Room = (props) => {
             });
 
             socketRef.current.on("receiving returned signal", payload => {
+                console.log("receiving returned signal")
                 const item = peersRef.current.find(p => p.peerID === payload.id);
                 item.peer.signal(payload.signal);
             });
@@ -102,6 +104,7 @@ const Room = (props) => {
     }
 
     function addPeer(incomingSignal, callerID, stream) {
+        console.log('adding peer')
         const peer = new Peer({
             initiator: false,
             trickle: false,
