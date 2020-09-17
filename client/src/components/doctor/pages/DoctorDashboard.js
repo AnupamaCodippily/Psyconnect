@@ -25,8 +25,8 @@ function DoctorDashboard(props) {
     setCurrentlyActiveSession();
     calcHoursToNextSession();
     if (currentlyActiveSession){
-      setupAppointments();
       props.clinicNextPatient(currentlyActiveSession._id);
+      setupAppointments();
     }
   }, []);
 

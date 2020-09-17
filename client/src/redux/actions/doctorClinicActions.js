@@ -19,7 +19,7 @@ export function clinicNextPatient (sessionId) {
                 type : CLINIC_NEXT_PATIENT,
                 payload : result
             })
-        } )
+        })
     }
 }
 
