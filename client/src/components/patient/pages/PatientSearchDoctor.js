@@ -4,9 +4,10 @@ import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card'
 import PatientHeader from '../layouts/PatientHeader'
 import SessionResultRows from '../layouts/SessionResultRows'
+import { connect } from 'react-redux'
 
 
-export default function PatientSearchDoctor(props) {
+ function PatientSearchDoctor(props) {
 
     useEffect(() => {
         searchDoctors()
@@ -71,3 +72,9 @@ export default function PatientSearchDoctor(props) {
         </Container>
     )
 }
+
+const mapStateToProps = state => ({
+    age: state.patient.age
+})
+
+export default connect( mapStateToProps, {} )( PatientSearchDoctor )

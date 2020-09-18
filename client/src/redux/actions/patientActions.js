@@ -16,6 +16,16 @@ export function unauthenticatePatient() {
 }
 
 
+export function patientAge( age ) {
+  return async function (dispatch) {
+    dispatch({
+      type : 'SET_AGE',
+      payload: age
+    })
+  }
+}
+
+
 export function getPatientAppointments (patientId) {
   return async function (dispatch) {
     fetch(`/patient/appointments/${patientId}`)

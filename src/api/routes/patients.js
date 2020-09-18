@@ -29,6 +29,21 @@ router.post( '/auth', (req, res) => {
 
 } );
 
+router.get( '/age/:id', (req, res) => {
+    mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true });
+
+    patientSchema.findOne( { _id:  req.params.id}, { dob:1 }, (err, result) => {
+        if (!err && result){
+
+            let thisYear = new Date().getFullYear()
+            let birthYear = new Date(result.dob).getFullYear()
+
+            let age = thisYear - birthYear
+
+            res.json({ 'age': age})
+        }
+    } )
+} )
 
 router.get('/appointments/:patientId', (req, res) => {
     mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true });

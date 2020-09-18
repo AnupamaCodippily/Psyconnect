@@ -10,6 +10,9 @@ let patient = new Schema(
     email : {
       type : String
     },
+    dob : {
+      type: Date
+    },
     password : {
       type : String
     }

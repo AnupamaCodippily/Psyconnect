@@ -23,6 +23,9 @@ let appointment = new Schema(
     delayed : {
       type : Boolean
     },
+    patient_age : {
+      type : Number
+    }
   },
   { collection: "appointments" }
 );

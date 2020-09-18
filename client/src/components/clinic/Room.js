@@ -4,26 +4,8 @@ import Peer from "simple-peer";
 import Container from 'react-bootstrap/Container'
 
 import { connect } from "react-redux";
-// import DoctorNotepad from "../doctor/layouts/DoctorNotepad";
 import DoctorClinic from "../doctor/pages/clinic/DoctorClinic";
 import PatientClinic from "../patient/clinic/PatientClinic";
-
-
-
-const Video = (props) => {
-    const ref = useRef();
-
-    useEffect(() => {
-        props.peer.on("stream", stream => {
-            ref.current.srcObject = stream;
-        })
-    }, []);
-
-    return (
-        <video playsInline autoPlay ref={ref} />
-    );
-}
-
 
 const Room = (props) => {
     const [peers, setPeers] = useState([]);
@@ -34,6 +16,12 @@ const Room = (props) => {
 
     const otherVideo = useRef()
     const [patients, setPatients] = useState([])
+
+
+    const appointment_id = props.match.params.appointmentId
+    const patient_id =  props.clinic.items.appointment[0].patient_id
+    const appointment =  props.clinic.items.appointment[0]
+
 
     useEffect(() => {
         socketRef.current = io.connect("/");
@@ -131,34 +119,16 @@ const Room = (props) => {
 
 
     if (props.auth.userType === 'doctor') {
-        return ( <DoctorClinic yourVid={ userVideo } otherVid={otherVideo} /> )
+        return ( <DoctorClinic yourVid={ userVideo }  otherVid={otherVideo} appointment={appointment} appointmentId= {appointment_id} patientId={patient_id} /> )
     }
     else {
         return ( <PatientClinic  yourVid={ userVideo } otherVid={otherVideo} />)
     }
-
-    return (
-        <Container>
-            <video muted ref={userVideo} autoPlay playsInline />
-            {/* {peers.map((peer, index) => {
-                console.log(typeof(peers))
-                // console.log(index)
-                // return (
-                //     <Video key={index} peer={peer} />
-                // );
-                otherVideo.current.srcObject = peer.stream
-            })} */}
-
-            <video ref={otherVideo} autoPlay playsInline />
-
-
-            
-        </Container>
-    );
 };
 
 const mapStateToProps = state => ({
-    auth : state.auth
+    auth : state.auth,
+    clinic: state.clinic
 })
 
 export default connect (mapStateToProps, {})(Room);

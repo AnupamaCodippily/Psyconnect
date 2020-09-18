@@ -19,12 +19,12 @@ function DoctorDashboard(props) {
   const [hoursToNext, setHoursToNext] = useState("No sessions today");
   const [enterSessionButton, setEnterSessionButton] = useState(null);
   const [currentAppointmentLink, setCurrentAppointmentLink] = useState(null);
-  let currentAppointments= []
+  let currentAppointments = [];
 
   useEffect(() => {
     setCurrentlyActiveSession();
     calcHoursToNextSession();
-    if (currentlyActiveSession){
+    if (currentlyActiveSession) {
       props.clinicNextPatient(currentlyActiveSession._id);
       setupAppointments();
     }
@@ -59,15 +59,15 @@ function DoctorDashboard(props) {
   const setupAppointments = () => {
     // set the doctor's current appointments in the component state
     fetch(`/doctors/appointments/next/${currentlyActiveSession._id}`)
-    .then( res => res.json() )
-    .then( result => {
+      .then((res) => res.json())
+      .then((result) => {
         // filter out completed appointments
-        result.appointment = result.appointment.filter(a => {
-            return !a.completed
-        })
+        result.appointment = result.appointment.filter((a) => {
+          return !a.completed;
+        });
 
-        let appointments = filterAndSortAppointments(result.appointment)
-        currentAppointments = [...appointments]
+        let appointments = filterAndSortAppointments(result.appointment);
+        currentAppointments = [...appointments];
         // set the link variable, to connect to the appointment
         if (appointments.length > 0) {
           setCurrentAppointmentLink(
@@ -76,16 +76,16 @@ function DoctorDashboard(props) {
             </Link>
           );
         }
-        
-    })
-    .catch(err => { console.log(err) })
-
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const filterAndSortAppointments = (appointmentList) => {
     // filter out completed appointments
     let list = appointmentList.filter((appointment) => {
-      return !appointment.completed
+      return !appointment.completed;
     });
 
     // sort the filtered appointments by number

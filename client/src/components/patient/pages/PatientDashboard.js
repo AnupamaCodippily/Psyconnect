@@ -10,6 +10,7 @@ import {
   setCurrentSessionActive,
   logPatientOut,
   getPatientAppointments,
+  patientAge
 } from "../../../redux/actions/patientActions";
 import { useEffect } from "react";
 
@@ -25,7 +26,6 @@ function PatientDashBoard(props) {
   let activeSessionAvailable = false;
   let activeSession = null;
   let nextAppointment;
-
   const [appointmentLink, setAppointmentLink] = useState(null);
 
   useEffect(() => {
@@ -37,8 +37,16 @@ function PatientDashBoard(props) {
 
     getAppointmentLink();
 
+    getPatientAge()
+
     // activeSessionAvailable = false;
   }, []);
+
+  function getPatientAge() {
+    fetch(`/patient/age/${props.patient.patient_id}`)
+      .then(res => res.json())
+      .then(res => { props.patientAge(res.age);})
+  }
 
   // put the patient in a session with the doctor using the session id
   const putInSession = () => {
@@ -143,6 +151,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
+  patientAge,
   setCurrentSessionActive,
   logPatientOut,
   getPatientAppointments,

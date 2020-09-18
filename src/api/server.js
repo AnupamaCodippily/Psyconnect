@@ -9,11 +9,20 @@ app.use(cors());
 
 app.use(express.json());
 
+// API ENDPOINTS
+
 app.use("/patient", require("./routes/patients"));
 app.use("/doctors", require("./routes/doctors"));
 app.use("/doctors/appointments/", require("./routes/appointments"));
 app.use("/appointments/", require("./routes/appointments"));
 app.use("/medicine/", require("./routes/medicine"));
+app.use("/conditions/", require("./routes/conditions"));
+app.use("/treatment_data/", require("./routes/treatments"));
+app.use("/medication/", require("./routes/medication"));
+
+// Accessing Machine Learning features
+
+
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "../../client/build/index.html"), function (

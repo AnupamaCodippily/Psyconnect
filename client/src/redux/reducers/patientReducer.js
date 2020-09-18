@@ -61,6 +61,13 @@ export default function (state = initialState, action) {
             }
         break;
 
+
+        case 'SET_AGE':
+            return{
+                ...state,
+                age: action.payload
+            }
+
         case FETCH_PATIENT_APPOINTMENTS:
             return{
                 ...state,

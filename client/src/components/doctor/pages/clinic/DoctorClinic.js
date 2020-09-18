@@ -29,6 +29,7 @@ function DoctorClinic(props) {
 
   const currentAppointment = props.clinic.items.appointment[0]
   const currentSessionId = currentAppointment.session_id;
+  const appointment = currentAppointment
 
   const [currentPatientNumber, setCurrentPatientNumber] = useState(0);
   const [nextAppointment, setNextAppointment] = useState(null);
@@ -131,7 +132,7 @@ function DoctorClinic(props) {
         <video ref={props.otherVid} autoPlay playsInline />
       </div>
 
-      <DoctorNotepad />
+      <DoctorNotepad appointmentId={props.appointmentId} appointment={appointment} patientId={ props.patientId } />
 
       <div>
         <hr></hr>

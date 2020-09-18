@@ -12,36 +12,36 @@ const mongoose = require('mongoose')
 var uri = process.env.MONGODB_URI || "mongodb://localhost:27017/psyconnect_db";
 
 
-    var sessions = [
+    // var sessions = [
 
-        {
-            id: 9003,
-            date : {
-                day : 11,
-                month : 11,
-                year : 2020  
-            },
-            time : {
-                hour: 18,
-                mins: 45
-            },         
-            patientsCount: 49
-        },
-        {
-            id: 9004,
-            date : {
-                day : 12,
-                month : 11,
-                year : 2020  
-            },
-            time : {
-                hour: 18,
-                mins: 45
-            },         
-            patientsCount: 67
-        }
+    //     {
+    //         id: 9003,
+    //         date : {
+    //             day : 11,
+    //             month : 11,
+    //             year : 2020  
+    //         },
+    //         time : {
+    //             hour: 18,
+    //             mins: 45
+    //         },         
+    //         patientsCount: 49
+    //     },
+    //     {
+    //         id: 9004,
+    //         date : {
+    //             day : 12,
+    //             month : 11,
+    //             year : 2020  
+    //         },
+    //         time : {
+    //             hour: 18,
+    //             mins: 45
+    //         },         
+    //         patientsCount: 67
+    //     }
 
-    ]
+    // ]
 
 // router.get( '/:doctorId/:date', (req, res) => {
 //     res.json(sessions);
@@ -73,7 +73,8 @@ router.post( '', (req, res) => {
                                 "patient_number" : result2.appointments +1 ,
                                 "patient_id" : mongoose.Types.ObjectId(req.body.patientId),
                                 "completed" : false,
-                                "delayed" : false
+                                "delayed" : false,
+                                "patient_age": req.body.age
                               } ,
                               (err3, result3) => {
                                     if ( err3) 

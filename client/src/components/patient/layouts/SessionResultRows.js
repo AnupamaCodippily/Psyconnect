@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 
 
 function SessionResultRows(props) {
-    
+    console.log(props.age)
     const divStyle = {
         "display": "flex",
         "flexDirection" : "row",
@@ -20,7 +20,8 @@ function SessionResultRows(props) {
             },
             "body" : JSON.stringify({
                 "sessionId" : session._id,
-                "patientId" : props.patientId
+                "patientId" : props.patientId,
+                "age": props.age
             })
         })
         .then(res => res.json())
@@ -74,7 +75,8 @@ function SessionResultRows(props) {
 }
 
 const mapStateToProps = state => ({
-    patientId : state.patient.patient_id
+    patientId : state.patient.patient_id,
+    age: state.patient.age
 })
 
 export default connect (mapStateToProps, {}) ( SessionResultRows )
