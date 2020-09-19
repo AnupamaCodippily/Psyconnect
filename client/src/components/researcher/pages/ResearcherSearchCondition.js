@@ -1,16 +1,22 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Form, Button, Container } from "react-bootstrap";
-import ResearchMedicationResults from "../layouts/ResearchMedicationResults";
+import ResearchConditionResults from "../layouts/ResearchConditionResults";
 
-export default function ResearcherSearchMedication() {
+export default function ResearcherSearchCondition() {
   const dropDown = useRef(null);
   const input = useRef(null);
   const inputMedIndex = useRef();
+
+  const conditionInput = useRef(null);
+  const inputCondCode = useRef()
 
   const revMedList = useRef({})
   const medList = useRef({})
   const revConList = useRef({})
   const conList = useRef({})
+
+
+
 
   const [medicines, setMedicines] = useState(null);
   const [medicineList, setMedicineList] = useState([]);
@@ -37,7 +43,7 @@ export default function ResearcherSearchMedication() {
     fetch("/medicine/list")
       .then((res) => res.json())
       .then((res) => {
-        setMedicines(getMedsList(res));
+        // setMedicines(getMedsList(res));
         setMedicineList(res)
         makemedlist(res)
         reverseMedicineList(res)
@@ -78,7 +84,7 @@ export default function ResearcherSearchMedication() {
     fetch("/conditions/list")
       .then((res) => res.json())
       .then((res) => {
-        // setConditions(getCondtionsList(res));
+        setConditions(getCondtionsList(res));
         setConditionList(res);
         makeConList(res)
         reverseConList(res)
@@ -102,23 +108,42 @@ export default function ResearcherSearchMedication() {
     });
   };
 
-  const handleSearch = e => {
-    if (checkValidMeds(input.current.value)) {
-        medication.current[input.current.value] = {
-          name: input.current.value,
-          dosage: 0,
-          times: 0,
-          beforeMeal: "Before",
-          medication_index: inputMedIndex.current
-        };
-  
-        searchMedicine(input.current.value)
-        // setMedicationRows(getRows());
-      }
-  }
+  const getCondtionsList = (list) => {
+    return list.map((cond) => {
+      return (
+        <a
+          onClick={(e) => {
+            setConditionSearchValue(e, cond.code);
+          }}
+        >
+          {cond.name}
+        </a>
+      );
+    });
+  };
 
-  const searchMedicine = m => {
-      fetch( '/treatment_data/data/' + medList.current[m].index ) 
+  const handleSearch = e => {
+
+    //   if (checkValidConds(conditionInput.current.value)) {
+    //     conditionRef.current[conditionInput.current.value] = {
+    //       name: conditionInput.current.value,
+    //       condition_code: inputCondCode.current
+    //     };
+    
+        // setConditionSearchValue(conditionInput.current, conditionInput.current.value)
+        searchCondition(conditionInput.current.value)
+        // setMedicationRows(getRows());
+//   }
+}
+
+  
+  const setConditionSearchValue = (e, condCode) => {
+    conditionInput.current.value = e.target.innerText;
+    inputCondCode.current = condCode
+  };
+
+  const searchCondition = m => {
+      fetch( '/treatment_data/data/condition/' + conList.current[m].code ) 
         .then( res => res.json() )
         .then( res => { 
             setSearchResults(res)
@@ -129,7 +154,7 @@ export default function ResearcherSearchMedication() {
 
 
   const buildResults = res => {
-    return ( <ResearchMedicationResults data={ res } conList={ revConList.current } medList={ revMedList.current }  /> )
+    return ( <ResearchConditionResults data={ res } conList={ revConList.current } medList={ revMedList.current }  /> )
   }
 
     // check if the medicine exists in the records
@@ -142,6 +167,11 @@ export default function ResearcherSearchMedication() {
         });
         return ans;
       };
+
+
+    const checkValidConds = c => {
+        return conList[c]
+    }
 
   // filters the list of medicine based on the letters typed by the doctor
   function filterFunction(e) {
@@ -166,6 +196,7 @@ export default function ResearcherSearchMedication() {
     inputMedIndex.current = medIndex;
   };
 
+
   return (
     <Container className="researcher-search-page">
       <div className="searchbar-researcher-medication">
@@ -177,15 +208,15 @@ export default function ResearcherSearchMedication() {
                     toggleFunction(e);
                   }}
                   type="text"
-                  placeholder="Medication Name"
+                  placeholder="Medical Condition Name"
                   value={searchMedicineValue.value}
                   onChange={filterFunction}
                   className="searchInput medicine-search-input"
-                  ref={input}
+                  ref={conditionInput}
                   onKeyUp={filterFunction}
                 />
               <div ref={dropDown} className="dropdown-content">
-                {medicines}
+                {conditions}
               </div>
             </div>
 

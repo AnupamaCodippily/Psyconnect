@@ -1,8 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Col, Row, Button } from 'react-bootstrap'
 import whiteLogo from '../../../images/logo_white.png'
+import ResearcherSearchCondition from './ResearcherSearchCondition'
+import ResearcherSearchMedication from './ResearcherSearchMedication'
 
 export default function ResearcherDashboard() {
+
+    const [dashboardBody, setDashboardBody] = useState( null )
+
+    const searchMeds = e => {
+        setDashboardBody( <ResearcherSearchMedication/> )
+    }
+
+    const searchCon = e => {
+        setDashboardBody( <ResearcherSearchCondition/> )
+    }
+
     return (
         <Row className='researcher-dashboard-body'>
             <Col xs={3} className='researcher-dashboard-sidebar'>
@@ -11,11 +24,11 @@ export default function ResearcherDashboard() {
                 <hr/>
                 <hr/>
 
-                <Button>
+                <Button onClick={ searchMeds }>
                     Search Medication
                 </Button>
                 <hr/>
-                <Button>
+                <Button onClick={ searchCon }>
                     Search Mental Health Conditions
                 </Button>
                 <hr/>
@@ -24,6 +37,7 @@ export default function ResearcherDashboard() {
                 </Button>
             </Col>
             <Col xs={7} className='researcher-dashboard-container'>
+                { dashboardBody }
             </Col>
         </Row>
     )

@@ -182,3 +182,15 @@
   width: 100%;
 }
 
+/* RESEARCHER SEARCH */
+
+.medicine-search-input {
+  height: 50px;
+  width: 40ch;
+}
+
+.researcher-search-page {
+  padding-left: 10%;
+  padding-top: 10%;
+}
+

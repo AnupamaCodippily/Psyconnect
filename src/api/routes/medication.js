@@ -11,8 +11,10 @@ const mongoose = require('mongoose')
 var uri = process.env.MONGODB_URI || "mongodb://localhost:27017/psyconnect_db";
 
 
-
 router.post('', (req, res) => {
+
+    mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false });
+
 
     medicationSchema.create( { 
         prescription: req.body.prescription,
