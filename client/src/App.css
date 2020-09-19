@@ -117,3 +117,68 @@
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
+
+
+/* LANDING PAGE */
+
+.landing-psyconnect-logo {
+    width: 100%;
+}
+
+.app-div {
+  background: url(images/logo_translucent.png);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.landing-div {
+  height: 100vh;
+}
+
+.slogan-holder h1 {
+  color: rgb(6, 70, 70);
+  font-family: 'Courier New', Courier, monospace;
+  padding: 10% 20% 2% 20%;
+  text-align: center;
+}
+
+.landing-navbar {
+  background-color: rgb(2, 105, 223);
+  color: white;
+}
+
+.landing-navbar ul li .nav-link{
+  color: white;
+  font-size: large;
+}
+
+.nav-link-white {
+  background-color: white !important;
+  color:  rgb(2, 105, 223) !important;
+}
+
+/* RESEARCHER DASHBOARD */
+.researcher-dashboard-sidebar {
+  background-color: rgb(2, 105, 223);
+  color: white;
+  justify-content: center;
+}
+
+.researcher-dashboard-body, 
+.researcher-dashboard-container,
+.researcher-dashboard-sidebar
+{
+  height: 100vh;
+}
+
+.researcher-dashboard-container,
+.researcher-dashboard-sidebar
+{
+  display: flex;
+  flex-direction: column;
+}
+
+.side-nav-logo {
+  width: 100%;
+}
+

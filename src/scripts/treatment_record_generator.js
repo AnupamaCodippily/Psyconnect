@@ -27,7 +27,37 @@ const createRandom = ( num, maxAge, con, med ) => {
 }
 
 
+const createRandomWithBias = (num, maxAge, con_code, med_code) => {
+    let arr = []
+
+    for( let i = 0;  i < num; i++) {
+        let obj = {
+            patient_age: Math.floor(Math.random() * maxAge),
+            condition_code: con_code,
+            medication_index: med_code
+        }   
+
+        arr.push(obj)
+    }
+
+    let jsonArr = JSON.stringify( arr )
+
+    return jsonArr
+}
+
 app.get( '/random/:num/:maxAge/:con/:med', (req,res) => {
+    const jsonAnswer = createRandom(
+        req.params.num,
+        req.params.maxAge,
+        req.params.con,
+        req.params.med
+    )
+
+    res.send(jsonAnswer)
+})
+
+
+app.get( '/bias/:num/:maxAge/:con/:med', (req,res) => {
     const jsonAnswer = createRandom(
         req.params.num,
         req.params.maxAge,

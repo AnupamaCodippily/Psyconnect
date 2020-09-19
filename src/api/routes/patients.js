@@ -113,6 +113,23 @@ router.get('/appointments/:patientId', (req, res) => {
 })
 
 
+// creating a new patient in sign-up
+router.post( '', ( req, res ) => {
+    mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true });
+
+    patientSchema.create({
+        name: req.body.name,
+        dob : req.body.dob,
+        email: req.body.email,
+        password: req.body.password
+    },
+    ( err, result ) => {
+        if (!err) 
+            res.json({ success : true })
+    })
+})
+
+
 
 
 module.exports = router;
