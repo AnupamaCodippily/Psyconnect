@@ -194,3 +194,6 @@
   padding-top: 10%;
 }
 
+.researcher-predict-search {
+  display: flex;
+}

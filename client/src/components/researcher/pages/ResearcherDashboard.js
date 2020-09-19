@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Container, Col, Row, Button } from 'react-bootstrap'
 import whiteLogo from '../../../images/logo_white.png'
+import ResearchPrediction from '../layouts/ResearchPrediction'
 import ResearcherSearchCondition from './ResearcherSearchCondition'
 import ResearcherSearchMedication from './ResearcherSearchMedication'
 
@@ -14,6 +15,10 @@ export default function ResearcherDashboard() {
 
     const searchCon = e => {
         setDashboardBody( <ResearcherSearchCondition/> )
+    }
+
+    const predict = e => {
+        setDashboardBody(<ResearchPrediction/>)
     }
 
     return (
@@ -32,7 +37,7 @@ export default function ResearcherDashboard() {
                     Search Mental Health Conditions
                 </Button>
                 <hr/>
-                <Button>
+                <Button onClick={predict}>
                     Medication Prediction
                 </Button>
             </Col>

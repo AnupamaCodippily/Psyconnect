@@ -55,7 +55,7 @@ export default function ResearchConditionResults(props) {
     return (
       <div>
         <div className="conditions-cases">
-          <h4> This medicine is commonly used to treat the following </h4>
+          <h4> This condition has been treated with the following drugs </h4>
   
           <Table striped bordered hover>
             <thead>
