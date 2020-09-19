@@ -93,7 +93,7 @@ export default function ResearchPrediction(props) {
         let test_age = ( age > 0 && age != "") ? age : defaultAge
 
         Object.keys(obj).forEach( (k,v) => {
-            matrix.push([  test_age, k.code ])
+            matrix.push([  test_age, conditionRef.current[k].code ])
         } )
 
         return matrix
@@ -118,15 +118,19 @@ export default function ResearchPrediction(props) {
         headers: {
             'Content-type': 'application/json'
         },
-        body: JSON.stringify( conv_to_matrix(conditionRef.current) )
+        mode: 'no-cors',
+        body: JSON.stringify({ 
+            // "data": conv_to_matrix(conditionRef.current)
+            data: [ [ 3,4 ] ] 
+        })
     })
-    .then( res => {
+    .then( res => 
         res.json()
-    })
+    )
     .then( res => {
         console.log(res)
     })
-    .catch( err => { alert('Error' + err) } )
+    .catch( err => { alert('Error' + err); console.log(err) } )
 
   };
 
