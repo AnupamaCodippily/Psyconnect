@@ -21,7 +21,9 @@ app.use("/treatment_data/", require("./routes/treatments"));
 app.use("/medication/", require("./routes/medication"));
 
 // Accessing Machine Learning features
-
+app.post('/test', (req, res)=> {
+  console.log(req.body)
+})
 
 
 app.get("*", function (req, res) {

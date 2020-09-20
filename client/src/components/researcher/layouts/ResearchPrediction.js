@@ -11,6 +11,7 @@ export default function ResearchPrediction(props) {
   const conditionInput = useRef(null);
   const inputCondCode = useRef()
   const addButton = useRef(null);
+  const revMedList = useRef({})
 
   const [searchMedicineValue, setSearchMedicineValue] = useState({ value: "" });
   const [searchConditionValue, setSearchConditionValue] = useState({
@@ -28,13 +29,15 @@ export default function ResearchPrediction(props) {
 
   let conditionListRef
   const medList = useRef({})
-  const defaultAge = 20
+  const defaultAge = 27
   
+  const medTableRef = useRef({})
+
   let age = defaultAge
-  const searchObj = useRef({})
+  // const searchObj = useRef({})
   const testAge = useRef(0)
   const aws_hosted_psyconnect_model_url =
-    "https://ughmvqu74l.execute-api.us-east-2.amazonaws.com/psyconnectml/";
+    "https://ughmvqu74l.execute-api.us-east-2.amazonaws.com/psyconnectml";
 
   useEffect(() => {
     fetchMedicineList();
@@ -52,7 +55,7 @@ export default function ResearchPrediction(props) {
         // setMedicines(getMedsList(res));
         setMedicineList(res);
         makemedlist(res)
-
+        reverseMedicineList(res)
       })
       .catch((err) => {
         console.log("Error fetching medicine data" + err);
@@ -111,27 +114,29 @@ export default function ResearchPrediction(props) {
 
 
   const predict = () => {
-    console.log(conv_to_matrix(conditionRef.current))
-    console.log(conditionRef.current)
-    fetch(aws_hosted_psyconnect_model_url, {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        mode: 'no-cors',
-        body: JSON.stringify({ 
-            // "data": conv_to_matrix(conditionRef.current)
-            data: [ [ 3,4 ] ] 
-        })
-    })
-    .then( res => 
-        res.json()
-    )
-    .then( res => {
-        console.log(res)
-    })
-    .catch( err => { alert('Error' + err); console.log(err) } )
 
+    console.log(conditionRef.current)
+    console.log(conv_to_matrix(conditionRef.current))
+
+    var proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+    fetch(proxyUrl+ aws_hosted_psyconnect_model_url, {
+        method: 'POST',
+        body: JSON.stringify({ 
+            "data": conv_to_matrix(conditionRef.current)
+            // data: [[3,4]]   // testing
+        }),
+        headers: {
+            'Content-type': 'application/json',
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials" : true ,
+            'authorizationToken': 'allow'
+        }
+    })
+    .then( res => res.json())
+    .then( res => {
+      buildMedTable(res)
+    })
+    .catch( err => { alert('Incorrect name provided') } )
   };
 
   const handleAdd = () => {
@@ -180,6 +185,29 @@ console.log(conditionList)
     });
   };
 
+  const reverseMedicineList = (list) => {
+
+    (list).forEach( m => {
+        revMedList.current[m.index] = { name: m.name }
+    })
+  }
+
+  const buildMedTable = res => {
+    medTableRef.current = {}
+    var arr = []
+    res.forEach( r => {
+      if ( !medTableRef.current[r] && r > 0 && r < 100) {
+        medTableRef.current[r] = revMedList.current[r].name
+        arr.push(r)
+      }
+    })
+
+    medication.current = medTableRef.current
+
+    setMedicationRows(getRows(arr))
+
+  }
+ 
   const changeValue = (e, med, index) => {
     medication.current[med][index] = e.target.value;
   };
@@ -213,26 +241,17 @@ console.log(conditionList)
     });
   };
 
-  const getRows = () => {
-    return Object.keys(medication.current).map((k, v) => {
+  const getRows = (arr) => {
+    console.log(revMedList.current)
+    // return Object.keys(medication.current).map((k, v) => {
+      return ( arr.map ( k => {
       // console.log(medication.current[k])
       return (
         <tr>
-          <td>{medication.current[k].name}</td>
-          <td>
-            <Button
-              variant="danger"
-              onClick={(h) => {
-                handleRemove(k);
-              }}
-            >
-              {" "}
-              x{" "}
-            </Button>
-          </td>
+          <td>{revMedList.current[k].name}</td>
         </tr>
       );
-    });
+    }))
   };
 
   // filters the list of medicine based on the letters typed by the doctor
@@ -322,7 +341,6 @@ console.log(conditionList)
         <thead>
           <tr>
             <th>Medication Name</th>
-            <th> </th>
           </tr>
         </thead>
         <tbody>{medicationRows}</tbody>
