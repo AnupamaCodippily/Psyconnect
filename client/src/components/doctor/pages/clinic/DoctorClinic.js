@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
-// import Peer from "peerjs";
-
-import Peer from "peerjs";
 import { useHistory } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
@@ -37,7 +34,7 @@ function DoctorClinic(props) {
 
   useEffect(() => {
     socket.current = io("/");
-
+    setCurrentPatientNumber( props.clinic.items.appointment[0].patient_number)
     // set the doctor's webcam visible to the doctor
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
@@ -122,14 +119,10 @@ function DoctorClinic(props) {
   return (
     <Container>
       <h1> Dr.{props.doctor.name} Clinic </h1>
-      <h5> Current session id: {currentSessionId} </h5>
       <h4>Patient number : {currentPatientNumber}</h4>
-      <div>
-        {/* {UserVideo}
-        {patientVideo} */}
-
-        <video muted ref={props.yourVid} autoPlay playsInline />
-        <video ref={props.otherVid} autoPlay playsInline />
+      <div className='video-holder'>
+        <video className='doctor-video' muted ref={props.yourVid} autoPlay playsInline />
+        <video className='patient-video' ref={props.otherVid} autoPlay playsInline />
       </div>
 
       <DoctorNotepad appointmentId={props.appointmentId} appointment={appointment} patientId={ props.patientId } />

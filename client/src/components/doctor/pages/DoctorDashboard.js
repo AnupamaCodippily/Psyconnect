@@ -131,16 +131,9 @@ function DoctorDashboard(props) {
       <h3> {hoursToNext} </h3>
       <hr />
 
-      <Link to="/doctor/clinic">{enterSessionButton}</Link>
-
       {currentAppointmentLink}
-
-      {/* <Link to={currentAppointmentLink}>
-            <Button role="doctor">ENTER CLINIC</Button>
-            </Link> */}
       <hr />
-      <Button> Create a new Session </Button>
-
+      
       <DoctorSessionBuilder />
     </Container>
   );

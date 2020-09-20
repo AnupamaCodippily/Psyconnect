@@ -78,6 +78,9 @@ function DoctorSessionBuilder(props) {
 
   return (
     <div>
+
+      <h3> Create a new session </h3>
+
       <Form>
         <Form.Group controlId="sessionBuilder.DateSelect">
           <Form.Label>Date: </Form.Label>

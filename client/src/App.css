@@ -129,6 +129,11 @@
   background: url(images/logo_translucent.png);
   background-position: center;
   background-repeat: no-repeat;
+  width: 100vw;
+}
+
+#root {
+  width: 100vw;
 }
 
 .landing-div {
@@ -184,6 +189,10 @@
 
 /* RESEARCHER SEARCH */
 
+.researcher-dashboard-container{
+  background: #f1f1f1;
+}
+
 .medicine-search-input {
   height: 50px;
   width: 40ch;
@@ -196,4 +205,44 @@
 
 .researcher-predict-search {
   display: flex;
+}
+
+/* signup */
+
+.signup-form-container {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  align-items: center;
+  background-color: rgb(22, 190, 134);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  width: 100vw;
+  min-width: 100%;
+}
+
+.signup-form {
+  background-color: white;
+  border-radius: 30px;
+  padding: 40px;
+  width: 40%;
+}
+
+.signup-form-heading {
+  color: rgb(22, 190, 134);
+}
+
+
+/* video call */
+.video-holder {
+  display: flex;
+  flex-direction: row;
+  background-color: teal;
+  padding: 5px;
+}
+
+.doctor-video, .patient-video {
+  border: solid 5px teal;
 }

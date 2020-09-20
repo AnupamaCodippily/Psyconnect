@@ -52,10 +52,13 @@ export default function PatientSignup(props) {
   };
 
   return (
-    <Container>
-      <h5> Sign up to access the Psyconnectme Patient platform </h5>
+    <Container className='signup-form-container'>
 
       <div className="signup-form">
+
+      <h5 className='signup-form-heading'> Sign up to access the Psyconnectme Patient platform </h5>
+
+
         <Form>
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Your Name *</Form.Label>
